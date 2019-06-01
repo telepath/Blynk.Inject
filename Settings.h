@@ -109,6 +109,7 @@
 /*
  * Advanced options
  */
+ // #define BLYNK_SSL_USE_LETSENCRYPT   // Comment this out, if using public Blynk Cloud
 
 #define BUTTON_HOLD_TIME_INDICATION   3000
 #define BUTTON_HOLD_TIME_ACTION       10000
