@@ -8,6 +8,11 @@
  *
  **************************************************************/
 
+#ifdef BOARD_CHAINABLE_LED
+  #include <ChainableLED.h>
+  ChainableLED leds(BOARD_LED_SER_PIN1, BOARD_LED_SER_PIN2, BOARD_NUM_LEDS);
+#endif
+
 #if defined(BOARD_LED_PIN_WS2812)
   #include <Adafruit_NeoPixel.h>    // Library: https://github.com/adafruit/Adafruit_NeoPixel
 
@@ -20,7 +25,7 @@ void indicator_run();
 #define BOARD_LED_BRIGHTNESS 255
 #endif
 
-#if defined(BOARD_LED_PIN_WS2812) || defined(BOARD_LED_PIN_R)
+#if defined(BOARD_LED_PIN_WS2812) || defined(BOARD_LED_PIN_R) || defined(BOARD_LED_SER_PIN1)
 #define BOARD_LED_IS_RGB
 #endif
 
@@ -74,8 +79,22 @@ protected:
   /*
    * LED drivers
    */
+#if defined(BOARD_LED_SER_PIN1) //Grove ChainableLED
 
-#if defined(BOARD_LED_PIN_WS2812)  // Addressable, NeoPixel RGB LED
+  void initLED() {
+  }
+
+  void setRGB(uint32_t color) {
+    uint8_t red = (color & 0xFF0000) >> 16;
+    uint8_t green = (color & 0x00FF00) >> 8;
+    uint8_t blue = (color & 0x0000FF);
+
+    for (size_t i = 0; i < BOARD_NUM_LEDS; i++) {
+      leds.setColorRGB(i,red,green,blue);
+    }
+  }
+
+#elif defined(BOARD_LED_PIN_WS2812)  // Addressable, NeoPixel RGB LED
 
   void initLED() {
     rgb.begin();
